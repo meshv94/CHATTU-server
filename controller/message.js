@@ -10,7 +10,7 @@ const sendMessage = async (req, res) => {
     const receiverId = req.params.id;
     const senderId = req.user._id;
 
-    console.log(message, senderId, receiverId);
+    // console.log(message, senderId, receiverId);
 
     if (!receiverId || !message) throw new Error("Missing fields");
 
@@ -37,6 +37,7 @@ const sendMessage = async (req, res) => {
 
     // socket io implimentation here
     const recieverSocketId = getRecieverSocketId(receiverId)
+    console.log('recieversocketId' + recieverSocketId)
     if(recieverSocketId){
       io.to(recieverSocketId).emit('newMessage', newMessage)
     }
