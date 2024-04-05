@@ -9,12 +9,12 @@ const register = async (req, res) => {
 
     const userExist = await UserModel.findOne({ username });
     if (userExist) {
-      res.status(200).json({ msg: "user already exist with this username" });
+      res.status(400).json({ msg: "user already exist with this username" });
     } else {
       const userExist = await UserModel.findOne({ phone });
       if (userExist)
         return res
-          .status(200)
+          .status(400)
           .json({ msg: "user already exist with this phone" });
 
       const hash_password = await bcrypt.hash(password, 10);
@@ -41,15 +41,15 @@ const login = async (req, res) => {
   try {
     const result = await UserModel.findOne({ username });
     // console.log(result._id)
-    if (!result) return res.status(200).json({ msg: "user not found" });
+    if (!result) return res.status(400).json({ msg: "user not found" });
 
     const isValidUser = await bcrypt.compare(password, result.password);
 
     if (isValidUser) {
       const token = generateAndSetToken(req, res, result._id);
-      res.status(200).json({ user : result , jwt: token });
+      res.status(200).json({ user: result, jwt: token });
     } else {
-      res.status(200).json({ msg: "Invalid username or password" });
+      res.status(400).json({ msg: "Invalid username or password" });
     }
   } catch (error) {
     res.status(400).send(error);
